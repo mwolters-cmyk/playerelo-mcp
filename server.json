@@ -1,0 +1,35 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.mwolters-cmyk/playerelo-mcp",
+  "description": "Football player & coach Elo ratings, predictions, value bets and recruitment fit as MCP tools.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/mwolters-cmyk/playerelo-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "playerelo-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "PLAYERELO_API_KEY",
+          "description": "Your PlayerElo API key (free tier at https://playerelo.football/api-access).",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "PLAYERELO_BASE_URL",
+          "description": "Override the API base URL (default https://data-api.playerelo.football).",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}
