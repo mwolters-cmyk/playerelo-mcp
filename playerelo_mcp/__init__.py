@@ -5,4 +5,4 @@ imports the football model/pipeline (``fapi_elo``) or touches a database — eve
 one authenticated HTTP call, so the server runs anywhere (a user's laptop over stdio) with
 just a PlayerElo API key. See server.py."""
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"

@@ -1,8 +1,8 @@
 """PlayerElo MCP server.
 
 Exposes the PlayerElo REST API (player + coach Elo ratings, EAR, market-value estimates,
-predictions, value bets, playing-style and recruitment-fit) as MCP tools an AI agent can
-call. It is a THIN client: every tool is one authenticated GET against
+predictions, a settled value-bet track record, playing-style and recruitment-fit) as MCP
+tools an AI agent can call. It is a THIN client: every tool is one authenticated GET against
 ``https://data-api.playerelo.football`` — no database, no model code, no ``fapi_elo`` import,
 so the whole thing runs on a user's machine over stdio with just an API key.
 
@@ -110,7 +110,7 @@ def get_player_style(player_id: int) -> Optional[dict]:
 @mcp.tool()
 def get_player_opportunities(player_id: int, top_n: int = 25) -> Optional[dict]:
     """Recruitment opportunity map for a player: realistically reachable clubs that could
-    plausibly sign them, ranked by fit. Requires a Business-tier key."""
+    plausibly sign them, ranked by fit."""
     return _get(f"/v1/players/{player_id}/opportunities", {"top_n": top_n})
 
 
@@ -163,25 +163,27 @@ def list_leagues() -> list[dict]:
 
 @mcp.tool()
 def get_league_ranking(league_id: int) -> Optional[dict]:
-    """A league's clubs ranked by Team Elo (current-season strength order)."""
+    """A league's clubs ranked by Team Elo. Only available for a league in its off-season:
+    for a league with a season in progress (most leagues, most of the year) this returns
+    null."""
     return _get(f"/v1/leagues/{league_id}/ranking")
 
 
 # ── Predictions & betting ────────────────────────────────────────────────────
 @mcp.tool()
 def get_predictions(league: Optional[str] = None) -> list[dict]:
-    """Upcoming-match win/draw/win probabilities from confirmed lineups, refreshed roughly
-    every 10 minutes. Optionally filter by a league name/code. These are lineup-aware
+    """Upcoming-match win/draw/win probabilities from confirmed lineups, refreshed every
+    few minutes. Optionally filter by a league name/code. These are lineup-aware
     predictions, not just team form."""
     return _get("/v1/predictions", {"league": league}) or []
 
 
 @mcp.tool()
 def get_value_bets(strategy: Optional[str] = None, since: Optional[int] = None) -> list[dict]:
-    """Current value-bet signals — where PlayerElo's fair odds diverge from the market price.
-    Optionally filter by strategy ("hs2_v6" = High Volume, "hs1_v6" = Sweet Spot). To poll
-    for only NEW picks, pass since=<the largest id from your previous call>; signals refresh
-    about every 10 minutes."""
+    """The settled track record of PlayerElo's value picks: bets resolved as won or lost,
+    with our fair odds and the model version. Open bets are not served; this is a track
+    record, not betting tips. Rows are added once a day as bets settle. Optionally filter
+    by strategy (e.g. "hs2_v6"). since=<id> returns only rows with a higher id."""
     return _get("/v1/value-bets", {"strategy": strategy, "since": since}) or []
 
 
@@ -190,8 +192,7 @@ def get_value_bets(strategy: Optional[str] = None, since: Optional[int] = None) 
 def get_transfer_fit(player_id: int, target_club_id: int) -> Optional[dict]:
     """A 0-100 transfer-fit score for a specific player → club move, blending tactical fit
     (style match to the club's system), financial fit (our value estimate vs the club's
-    typical spend) and strategic fit (squad need, age, level), with the per-signal breakdown.
-    Requires an Ultra-tier key or higher."""
+    typical spend) and strategic fit (squad need, age, level), with the per-signal breakdown."""
     return _get("/v1/fit", {"player_id": player_id, "target_club_id": target_club_id})
 
 

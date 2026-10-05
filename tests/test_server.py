@@ -31,8 +31,8 @@ def test_get_player_uses_id_path(calls):
 
 
 def test_value_bets_passes_since_cursor(calls):
-    server.get_value_bets(strategy="hs1_v6", since=4821)
-    assert calls == [("/v1/value-bets", {"strategy": "hs1_v6", "since": 4821})]
+    server.get_value_bets(strategy="hs2_v6", since=4821)
+    assert calls == [("/v1/value-bets", {"strategy": "hs2_v6", "since": 4821})]
 
 
 def test_transfer_fit_binds_both_ids(calls):

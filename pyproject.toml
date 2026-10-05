@@ -1,12 +1,12 @@
 [project]
 name = "playerelo-mcp"
-version = "0.1.0"
-description = "MCP server for PlayerElo — player- and coach-level football Elo ratings, predictions, value bets and recruitment fit."
+version = "0.1.1"
+description = "MCP server for PlayerElo — player- and coach-level football Elo ratings, predictions, a settled value-bet track record and recruitment fit."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "LivingMeta", email = "playerelo@livingmeta.ai" }]
-keywords = ["mcp", "model-context-protocol", "football", "soccer", "elo", "ratings", "predictions", "betting"]
+keywords = ["mcp", "model-context-protocol", "football", "soccer", "elo", "ratings", "predictions"]
 dependencies = [
     # Pin to the 1.x line: the stable FastMCP high-level API (mcp.server.fastmcp) that
     # Claude Desktop / uvx examples use. mcp 2.0 restructured the server API; revisit
